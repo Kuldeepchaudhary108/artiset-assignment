@@ -37,7 +37,7 @@ jobs:
 
           sleep 5
           curl -v http://localhost:5000 | tee test-output/result.txt
-          grep "Hello DevOps" test-output/result.txt
+          grep "Hello World from Flask!" test-output/result.txt
 
           docker stop test_container
 
