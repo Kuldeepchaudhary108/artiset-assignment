@@ -8,6 +8,7 @@ grep '"status":"ok"' test-output/health.txt
 curl -v http://localhost:5000/live >> test-output/live.txt
 grep '"status":"alive"' test-output/live.txt
 
+
 # /ready probe
 curl -v http://localhost:5000/ready >> test-output/ready.txt
 grep '"status":"ready"' test-output/ready.txt
