@@ -31,7 +31,7 @@ jobs:
 
       - name: Run basic test
         run: |
-          chmod +e test.sh
+          chmod +x test.sh
           ./test.sh
     
       - name: Upload test artifact
