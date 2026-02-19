@@ -12,6 +12,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # ✅ ADD THIS BLOCK RIGHT HERE
+      - name: Run flake8
+        run: |
+          pip install flake8
+          flake8 src
+
       - name: Set image version
         run: |
           Z=1
@@ -35,34 +41,3 @@ jobs:
           sleep 5
           chmod +x test.sh
           ./test.sh
-    
-      - name: Upload test artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: basic-test-output
-          path: test-output/result.txt
-
-      - name: Push image
-        run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/artiset-assignment:${{ env.IMAGE_TAG }}
-      
-      ## Here Start CD Pipeline to deploy on GCP
-      
-      - name: Authenticate to GCP
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
-
-      - name: Deploy to Container to GCP
-        run: |
-          gcloud compute ssh ubuntu@instance-20260114-132435 \
-            --zone=us-central1-c \
-            --command="
-              docker pull ${{ secrets.DOCKERHUB_USERNAME }}/artiset-assignment:${{ env.IMAGE_TAG }} &&
-              docker stop app || true &&
-              docker rm app || true &&
-              docker run -d \
-                --name app \
-                -p 80:5000 \
-                ${{ secrets.DOCKERHUB_USERNAME }}/artiset-assignment:${{ env.IMAGE_TAG }}
-            "
